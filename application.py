@@ -42,9 +42,35 @@ if not os.environ.get("API_KEY"):
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    """Register a new user"""
+    if request.method == "GET":
+        return render_template("register.html")
+    else:
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        if not username:
+            return 0
+        if not password:
+            return 0
+        pwhash = generate_password_hash(password)
+        insert = db.execute("INSERT INTO users (username, password) VALUES (:username, :password)", username = username, password =pwhash)
+        if not insert:
+            return apology("Username already exists")
+        session["user_id"] = insert
+        flash('You have successfully registered.')
+        return redirect("/")
+
+
 
 @app.route("/input", methods=["GET", "POST"])
 def input():
+    if request.method == "GET":
+        return render_template("input.html")
+    else:
+    title = request.form.get("title")
+    artist = request.form.get("artist")
+    input = db.execute("INSERT INTO songs (title, artist) VALUES(:title, :artist)", title = title, artist= artist)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
