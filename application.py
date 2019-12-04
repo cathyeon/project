@@ -64,7 +64,7 @@ def register():
         if not password:
             return 0
         pwhash = generate_password_hash(password)
-        insert = db.execute("INSERT INTO users (username, password) VALUES (:username, :password)", username = username, password =pwhash)
+        insert = db.execute("INSERT INTO users (username, password) VALUES (:username, :password)", username = username, password=pwhash)
         if not insert:
             return apology("Username already exists")
         session["user_id"] = insert
@@ -79,10 +79,11 @@ def songinput():
     else:
         title = request.form.get("title")
         artist = request.form.get("artist")
-        songinput = db.execute("INSERT INTO songs (title, artist, user_id) VALUES (:title, :artist, :user_id)", title = title, artist = artist, user_id = session["user_id"])
+        songinput = db.execute("INSERT INTO songs (title, artist, user_id) VALUES (:title, :artist, :user_id)", title = title, artist=artist, user_id=session["user_id"])
         if not songinput:
             return apology("did not input song")
         return redirect("/")
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -124,7 +125,7 @@ def recommend():
 @app.route("/browse", methods=["GET", "POST"])
 def browse():
     songs = db.execute("SELECT * FROM songs")
-    return render_template("browse.html", songs = songs)
+    return render_template("browse.html", songs=songs)
 
 
 def errorhandler(e):
@@ -136,7 +137,3 @@ def errorhandler(e):
 # Listen for errors
 for code in default_exceptions:
     app.errorhandler(code)(errorhandler)
-
-
-
-
