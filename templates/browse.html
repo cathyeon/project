@@ -1,1 +1,26 @@
 <!DOCTYPE html>
+
+
+        <table>
+            <thead>
+                <tr>
+                    <th>
+                        Song Title
+                    </th>
+                    <th>
+                        Song Artist
+                    </th>
+                </tr>
+            </thead>
+            {% for song in songs %}
+                <tr>
+                    <td>
+                        {{song["title"]}}
+                    </td>
+                    <td>
+                        {{song["artist"]}}
+                    </td>
+                </tr>
+            {% endfor %}
+
+        </table>

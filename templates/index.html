@@ -22,17 +22,19 @@
                     </th>
                 </tr>
             </thead>
+            {% for song in songs %}
                 <tr>
                     <td>
-                        {{ ["title"] }}
+                        {{song["title"]}}
                     </td>
                     <td>
-                        {{ ["artist"] }}
+                        {{song["artist"]}}
                     </td>
                     <td>
-                        {{ ["time"] }}
+                        {{song["time"]}}
                     </td>
                 </tr>
+            {% endfor %}
         </table>
 
 {% endblock %}

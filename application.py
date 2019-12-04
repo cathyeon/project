@@ -45,7 +45,8 @@ def index():
     if request.method == "POST":
         return redirect("/")
     else:
-        return render_template("index.html")
+        songs = db.execute("SELECT * FROM songs WHERE user_id = :user_id", user_id=session["user_id"])
+        return render_template("index.html", songs=songs)
 
 
 
@@ -71,15 +72,17 @@ def register():
         return redirect("/")
 
 
-
 @app.route("/input", methods=["GET", "POST"])
-def input():
+def songinput():
     if request.method == "GET":
         return render_template("input.html")
     else:
         title = request.form.get("title")
         artist = request.form.get("artist")
-        input = db.execute("INSERT INTO songs (title, artist) VALUES(:title, :artist)", title = title, artist= artist)
+        songinput = db.execute("INSERT INTO songs (title, artist, user_id) VALUES (:title, :artist, :user_id)", title = title, artist = artist, user_id = session["user_id"])
+        if not songinput:
+            return apology("did not input song")
+        return redirect("/")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -120,11 +123,8 @@ def recommend():
 
 @app.route("/browse", methods=["GET", "POST"])
 def browse():
-    songs = db.execute("SELECT title, artist FROM songs")
-    for i in songs:
-        i["title"] = songs["title"]
-        i["artist"] = songs["artist"]
-    return render_template("browse.html", i = i)
+    songs = db.execute("SELECT * FROM songs")
+    return render_template("browse.html", songs = songs)
 
 
 def errorhandler(e):
