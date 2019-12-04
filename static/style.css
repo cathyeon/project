@@ -11,28 +11,28 @@
             width: 800;
         }
 
-h1
+.h1
         {
             color: blue;
             font-family: courier;
             font-size: 14pt;
         }
 
-h2
+.h2
         {
             color: pink;
             font-family: courier;
             font-size: 12pt
         }
 
-h3
+.h3
         {
             color: blue;
             font-family: courier;
             font-size: 10pt;
         }
 
-p
+.p
         {
             border: 1px solid blue;
             padding: 20px;

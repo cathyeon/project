@@ -1,23 +1,26 @@
-<!DOCTYPE html>
 
-<html>
-    <head>
-        <title>
-            Input New Songs
-        </title>
-    </head>
+{% extends "layout.html" %}
 
+{% block title %}
+    Input Songs
+{% endblock %}
+
+{% block main %}
+
+<h1 align="center">
+    Input Your Favorite Songs!
+</h1>
     <body>
-        <form action="/input" method="post">
+        <form  align ="center" action="/input" method="post">
             <input type="text" name="title" placeholder="Song Name">
             <br>
             <input type="text" name="artist" placeholder="Song Artist">
             <br>
-            <input type="text" name="field" placeholder="Category">
+            <textarea name="tags" cols="50" rows="10"><input type="text" name="field"  placeholder="Category"> </textarea>
             <br>
             <input type="submit">
-            <button> Add More</button>
         </form>
 
     </body>
-</html>
+
+{% endblock %}

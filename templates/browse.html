@@ -1,14 +1,23 @@
-<!DOCTYPE html>
 
+{% extends "layout.html" %}
 
-        <table>
+{% block title %}
+    Browse Songs
+{% endblock %}
+
+{% block main %}
+
+<h1 align="center">
+    All Songs
+</h1>
+        <table align= "center" border="1">
             <thead>
-                <tr>
-                    <th>
-                        Song Title
+                <tr align="center">
+                    <th width="200">
+                        <font size="5"> Song Title </font>
                     </th>
-                    <th>
-                        Song Artist
+                    <th width="200">
+                        <font size="5">Song Artist </font>
                     </th>
                 </tr>
             </thead>
@@ -24,3 +33,4 @@
             {% endfor %}
 
         </table>
+{% endblock %}
