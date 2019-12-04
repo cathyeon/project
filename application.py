@@ -7,7 +7,7 @@ from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from helpers import apology, login_required, lookup, usd
+from helpers import apology, login_required
 
 # Configure application
 app = Flask(__name__)
@@ -24,9 +24,6 @@ def after_request(response):
     return response
 
 
-# Custom filter
-app.jinja_env.filters["usd"] = usd
-
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
@@ -34,11 +31,23 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure CS50 Library to use SQLite database
-db = SQL("sqlite:///playlist.db")
+db = SQL("sqlite:///project.db")
 
 # Make sure API key is set
-if not os.environ.get("API_KEY"):
-    raise RuntimeError("API_KEY not set")
+#if not os.environ.get("API_KEY"):
+#    raise RuntimeError("API_KEY not set")
+
+@app.route("/")
+@login_required
+def index():
+    """Show portfolio of stocks"""
+    # Setting a new password
+    if request.method == "POST":
+        return redirect("/")
+    else:
+        return render_template("index.html")
+
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -68,15 +77,66 @@ def input():
     if request.method == "GET":
         return render_template("input.html")
     else:
-    title = request.form.get("title")
-    artist = request.form.get("artist")
-    input = db.execute("INSERT INTO songs (title, artist) VALUES(:title, :artist)", title = title, artist= artist)
+        title = request.form.get("title")
+        artist = request.form.get("artist")
+        input = db.execute("INSERT INTO songs (title, artist) VALUES(:title, :artist)", title = title, artist= artist)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    """Log User In"""
+
+    if request.method == "POST":
+        if not request.form.get("username"):
+            return apology("Please provide a username", 403)
+
+        elif not request.form.get("password"):
+            return apology("Please provide a password", 403)
+
+        rows = db.execute("SELECT * FROM users WHERE username = :username",
+                          username=request.form.get("username"))
+
+        if len(rows) != 1 or not check_password_hash(rows[0]["password"], request.form.get("password")):
+            return apology("invalid username and/or password", 403)
+
+        session["user_id"] = rows[0]["id"]
+
+        return redirect("/")
+    else:
+        return render_template("login.html")
+
 
 @app.route("/logout")
 def logout():
+    """Log User Out"""
+
+    session.clear()
+
+    return redirect("/")
+
+
+@app.route("/recommend", methods=["GET", "POST"])
+def recommend():
+    return render_template("recommend.html")
+
+@app.route("/browse", methods=["GET", "POST"])
+def browse():
+    songs = db.execute("SELECT title, artist FROM songs")
+    for i in songs:
+        i["title"] = songs["title"]
+        i["artist"] = songs["artist"]
+    return render_template("browse.html", i = i)
+
+
+def errorhandler(e):
+    """Handle error"""
+    if not isinstance(e, HTTPException):
+        e = InternalServerError()
+    return apology(e.name, e.code)
+
+# Listen for errors
+for code in default_exceptions:
+    app.errorhandler(code)(errorhandler)
+
 
 
 

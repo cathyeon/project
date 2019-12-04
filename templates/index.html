@@ -1,0 +1,38 @@
+
+{% extends "layout.html" %}
+
+{% block title %}
+    Index
+{% endblock %}
+
+{% block main %}
+
+
+        <table>
+            <thead>
+                <tr>
+                    <th>
+                        Song Title
+                    </th>
+                    <th>
+                        Song Artist
+                    </th>
+                    <th>
+                        Inputted
+                    </th>
+                </tr>
+            </thead>
+                <tr>
+                    <td>
+                        {{ ["title"] }}
+                    </td>
+                    <td>
+                        {{ ["artist"] }}
+                    </td>
+                    <td>
+                        {{ ["time"] }}
+                    </td>
+                </tr>
+        </table>
+
+{% endblock %}
