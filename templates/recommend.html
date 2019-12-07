@@ -6,19 +6,25 @@
 {% endblock %}
 
 {% block main %}
-
     <body>
-        <h1> Recommended Songs </h1>
+        <h1 align = "center"> Recommended Songs </h1>
+    <table id = "browse" align= "center" border="1">
+        <thead>
+            <tr align="center">
+                <th  width="200">
+                    <font  size="5"> Song Title </font>
+                </th>
+                <th width="200">
+                    <font size="5">Song Artist </font>
+                </th>
+            </tr>
+            <tr>
+                <td> {{tags["title"]}} </td>
+                <td> {{tags["artist"]}} </td>
+            </tr>
+        </thead>
 
-        <form action="/register" method="post">
-            <input type="text" name="username" placeholder="Username">
-            <br>
-            <input type="text" name="password" placeholder="Password">
-            <br>
-            <input type="text" name="confirmation" placeholder="Password Confirmation">
-            <br>
-            <input type="submit">
 
-        </form>
-    </body>
+
+</body>
 {% endblock %}

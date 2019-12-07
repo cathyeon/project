@@ -10,27 +10,29 @@
 <h1 align="center">
     All Songs
 </h1>
-        <table align= "center" border="1">
-            <thead>
-                <tr align="center">
-                    <th width="200">
-                        <font size="5"> Song Title </font>
-                    </th>
-                    <th width="200">
-                        <font size="5">Song Artist </font>
-                    </th>
-                </tr>
-            </thead>
-            {% for song in songs %}
-                <tr>
-                    <td>
-                        {{song["title"]}}
-                    </td>
-                    <td>
-                        {{song["artist"]}}
-                    </td>
-                </tr>
-            {% endfor %}
+    <table id = "browse" align= "center" border="1">
+        <thead>
+            <tr align="center">
+                <th  width="200">
+                    <font  size="5"> Song Title </font>
+                </th>
+                <th width="200">
+                    <font size="5">Song Artist </font>
+                </th>
+                <th width="200">
+                    <font size="5">Rating </font>
+                </th>
 
-        </table>
+            </tr>
+        </thead>
+        {% for song in songs %}
+            <tr>
+                <td> {{song["title"]}} </td>
+                <td> {{song["artist"]}} </td>
+                <td> {{song["rating"]}} </td>
+            </tr>
+        {% endfor %}
+
+    </table>
 {% endblock %}
+

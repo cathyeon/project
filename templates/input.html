@@ -6,17 +6,31 @@
 {% endblock %}
 
 {% block main %}
+<style>
+    .input
+    {
+        width: 400px;
+        height: 100px;
 
+    }
+    .inputsmall
+    {
+        width: 400px;
+
+    }
+</style>
 <h1 align="center">
     Input Your Favorite Songs!
 </h1>
     <body>
         <form  align ="center" action="/input" method="post">
-            <input type="text" name="title" placeholder="Song Name">
+            <input class = "inputsmall" type="text" name="title" placeholder="Song Name">
             <br>
-            <input type="text" name="artist" placeholder="Song Artist">
+            <input class = "inputsmall" type="text" name="artist" placeholder="Song Artist">
             <br>
-            <textarea name="tags" cols="50" rows="10"><input type="text" name="field"  placeholder="Category"> </textarea>
+            <input class = "input" type="text" name="tag" placeholder="Tags: Separate with Commas">
+            <br>
+            <input class = "inputsmall" type="int" name="rating" placeholder="Rate from 1-10">
             <br>
             <input type="submit">
         </form>
@@ -24,3 +38,4 @@
     </body>
 
 {% endblock %}
+

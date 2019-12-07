@@ -9,6 +9,14 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from helpers import apology, login_required
 
+
+###Recommendation
+import pandas as pd
+import numpy as np
+import warnings
+warnings.filterwarnings('ignore')
+#######
+
 # Configure application
 app = Flask(__name__)
 
@@ -79,10 +87,15 @@ def songinput():
     else:
         title = request.form.get("title")
         artist = request.form.get("artist")
-        songinput = db.execute("INSERT INTO songs (title, artist, user_id) VALUES (:title, :artist, :user_id)", title = title, artist=artist, user_id=session["user_id"])
+        tags = request.form.get("tag")
+        rating = request.form.get("rating")
+        for tag in tags.split(","):
+            db.execute("INSERT INTO tags (title, tag, user_id) VALUES (?,?,?)", title, tag, session["user_id"])
+        songinput = db.execute("INSERT INTO songs (title, artist, user_id, rating) VALUES (:title, :artist, :user_id, :rating)", title = title, artist=artist, user_id=session["user_id"], rating = rating)
         if not songinput:
             return apology("did not input song")
         return redirect("/")
+
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -112,19 +125,21 @@ def login():
 @app.route("/logout")
 def logout():
     """Log User Out"""
-
     session.clear()
-
     return redirect("/")
+
 
 
 @app.route("/recommend", methods=["GET", "POST"])
 def recommend():
-    return render_template("recommend.html")
+    songs = db.execute("SELECT * FROM songs WHERE user_id = :user_id", user_id=session["user_id"])
+    personaltags = db.execute("SELECT tag, count(tag) AS common FROM tags GROUP BY tag ORDER BY common DESC LIMIT 1")
+    tags = db.execute("SELECT * FROM tags WHERE tag = pop")
+    return render_template("recommend.html", tags=tags)
 
 @app.route("/browse", methods=["GET", "POST"])
 def browse():
-    songs = db.execute("SELECT * FROM songs")
+    songs = db.execute("SELECT * FROM songs ")
     return render_template("browse.html", songs=songs)
 
 
@@ -137,3 +152,6 @@ def errorhandler(e):
 # Listen for errors
 for code in default_exceptions:
     app.errorhandler(code)(errorhandler)
+
+
+
