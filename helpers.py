@@ -1,3 +1,4 @@
+# Taken from CS50 Finance Pset
 import os
 import requests
 import urllib.parse
@@ -20,6 +21,7 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+
 def apology(message, code=400):
     """Render message as an apology to user."""
     def escape(s):
@@ -27,4 +29,4 @@ def apology(message, code=400):
                          ("%", "~p"), ("#", "~h"), ("/", "~s"), ("\"", "''")]:
             s = s.replace(old, new)
         return s
-    return render_template("apology.html", top = code, bottom = escape(message)), code
+    return render_template("apology.html", top=code, bottom=escape(message)), code
