@@ -6,25 +6,26 @@
 {% endblock %}
 
 {% block main %}
-    <body>
-        <h1 align = "center"> Recommended Songs </h1>
+<body>
+    <h2 align = "center"> Recommended Songs Based on Tags </h2>
+    <!Table with the recommended songs>
     <table id = "browse" align= "center" border="1">
         <thead>
             <tr align="center">
-                <th  width="200">
+                <th  width="500">
                     <font  size="5"> Song Title </font>
                 </th>
-                <th width="200">
+                <th width="500">
                     <font size="5">Song Artist </font>
                 </th>
-            </tr>
+            </tr
             <tr>
+            {% for tags in tags %}
                 <td> {{tags["title"]}} </td>
-                <td> {{tags["artist"]}} </td>
+                <td>  {{tags["artist"]}}</td>
             </tr>
-        </thead>
-
-
+            {% endfor %}
+    </table>
 
 </body>
 {% endblock %}
