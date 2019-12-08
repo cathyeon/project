@@ -1,4 +1,4 @@
-Our project is essentially a recommendation algorithm that utilizes python. We base much of the foundation off of the CS50 Finance Problem Set, and have used much of the code. 
+Our project is essentially a recommendation algorithm that utilizes python. We worked from the CS50 Finance Problem Set, and have used much of the foundational code. 
 
 In application.py, which is our main document, we imported SQL functions from the cs50 database to make tables (with the song, artist, and genre) as well as flask functions from the flask database to run the website.
 We also import os as well as other functions which will be explained later.  Finally, we import apology and login_required from helpers, which is another python file that we wrote.
