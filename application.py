@@ -34,18 +34,19 @@ Session(app)
 db = SQL("sqlite:///project.db")
 
 
+# Function for the index which lists all the songs that the user inputted
 @app.route("/")
 @login_required
 def index():
     """Show list of songs"""
-    # Setting a new password
     if request.method == "POST":
         return redirect("/")
     else:
+        # Selecting from the databse of songs
         songs = db.execute("SELECT * FROM songs WHERE user_id = :user_id", user_id=session["user_id"])
         return render_template("index.html", songs=songs)
 
-
+# Function so a new user can register
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register a new user"""
@@ -54,91 +55,97 @@ def register():
     else:
         username = request.form.get("username")
         password = request.form.get("password")
+        # Returning an apology if no username is inputted
         if not username:
-            return 0
+            return apology("Enter valid username")
+        # Returning an apology if no password is inputted
         if not password:
-            return 0
+            return apology("Enter valid password")
+        # Hashing the password
         pwhash = generate_password_hash(password)
-        insert = db.execute("INSERT INTO users (username, password) VALUES (:username, :password)", username = username, password=pwhash)
+        # Storing info into the database
+        insert = db.execute("INSERT INTO users (username, password) VALUES (:username, :password)",
+                            username=username, password=pwhash)
         if not insert:
             return apology("Username already exists")
         session["user_id"] = insert
         flash('You have successfully registered.')
         return redirect("/")
 
+
 @app.route("/input", methods=["GET", "POST"])
 def songinput():
     if request.method == "GET":
         return render_template("input.html")
     else:
+        # Getting info from form
         title = request.form.get("title")
         artist = request.form.get("artist")
         tag = request.form.get("tag")
         tags = request.form.get("tag")
         rating = request.form.get("rating")
+        # Storing tags separated by commas into the tag table
         for tag in tags.split(","):
             db.execute("INSERT INTO tags (title, tag, user_id) VALUES (?,?,?)", title, tag, session["user_id"])
-        songinput = db.execute("INSERT INTO songs (title, artist, user_id, tag, rating) VALUES (:title, :artist, :user_id, :tag, :rating)", title = title, artist=artist, user_id=session["user_id"], tag = tag, rating = rating)
+        # Inputting info into the database
+        songinput = db.execute("INSERT INTO songs (title, artist, user_id, tag, rating) VALUES (:title, :artist, :user_id, :tag, :rating)",
+                               title=title, artist=artist, user_id=session["user_id"], tag=tag, rating=rating)
         if not songinput:
             return apology("did not input song")
+        else:
+            flash('You have inputted a song!')
         return redirect("/")
 
-
+# Function so that a user can log in
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Log User In"""
-
+    # Taken from CS50 Finance Problem Set
     if request.method == "POST":
         if not request.form.get("username"):
             return apology("Please provide a username", 403)
-
         elif not request.form.get("password"):
             return apology("Please provide a password", 403)
-
         rows = db.execute("SELECT * FROM users WHERE username = :username",
                           username=request.form.get("username"))
-
         if len(rows) != 1 or not check_password_hash(rows[0]["password"], request.form.get("password")):
             return apology("invalid username and/or password", 403)
-
         session["user_id"] = rows[0]["id"]
-
         return redirect("/")
     else:
         return render_template("login.html")
 
-
+# Function so that a user can log out
 @app.route("/logout")
 def logout():
     """Log User Out"""
+    # Taken from CS50 Finance Problem Set
     session.clear()
     return redirect("/")
 
 
+# Function that gives song recommendations
 @app.route("/recommend", methods=["GET", "POST"])
 def recommend():
-    personaltags = db.execute("SELECT tag, count(tag) AS common FROM tags WHERE user_id=:user_id GROUP BY tag ORDER BY common DESC LIMIT 1", user_id=session["user_id"])
-    row={}
+    """Recommends songs"""
+    # Selects the most common tag of the songs that you inputted
+    personaltags = db.execute(
+        "SELECT tag, count(tag) AS common FROM tags WHERE user_id=:user_id GROUP BY tag ORDER BY common DESC LIMIT 1", user_id=session["user_id"])
+    row = {}
+    # Finds every song in the database with that tag
     for row in personaltags:
-       pop = row["tag"]
-    tags = db.execute("SELECT * FROM songs WHERE tag = :common", common = pop)
-
-    #ratings = db.execute("SELECT * FROM songs WHERE user_id=:user_id", user_id= session["user_id"])
-    #others = db.execute("SELECT * FROM songs WHERE user_id!=:user_id", user_id= session["user_id"])
-
-    #for i in others:
-    #    for j in ratings:
-    #        if i["rating"] == j["rating"]:
-    #            recommend["title"] = j["title"]
-    #            recommend["artist"] = j["artist"]
-
+        pop = row["tag"]
+    tags = db.execute("SELECT * FROM songs WHERE tag = :common", common=pop)
     return render_template("recommend.html", tags=tags)
 
-
+# Function that allows users to see every songs in the database and search it up on youtube
 @app.route("/browse", methods=["GET", "POST"])
 def browse():
+    """Lists all the songs"""
     songs = db.execute("SELECT * FROM songs")
     return render_template("browse.html", songs=songs)
+
+# Taken directly from CS50 Finance
 
 
 def errorhandler(e):
@@ -151,3 +158,4 @@ def errorhandler(e):
 # Listen for errors
 for code in default_exceptions:
     app.errorhandler(code)(errorhandler)
+
