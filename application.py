@@ -48,7 +48,7 @@ db = SQL("sqlite:///project.db")
 @app.route("/")
 @login_required
 def index():
-    """Show portfolio of stocks"""
+    """Show list of songs"""
     # Setting a new password
     if request.method == "POST":
         return redirect("/")
@@ -66,7 +66,6 @@ def register():
     else:
         username = request.form.get("username")
         password = request.form.get("password")
-
         if not username:
             return 0
         if not password:
@@ -79,10 +78,9 @@ def register():
         flash('You have successfully registered.')
         return redirect("/")
 
-
 @app.route("/input", methods=["GET", "POST"])
 def songinput():
-    if request.method == "GET":
+    if request.method == "GET":0
         return render_template("input.html")
     else:
         title = request.form.get("title")
@@ -152,6 +150,3 @@ def errorhandler(e):
 # Listen for errors
 for code in default_exceptions:
     app.errorhandler(code)(errorhandler)
-
-
-
